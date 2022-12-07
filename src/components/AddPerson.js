@@ -1,93 +1,89 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Modal, Input, Typography} from 'antd';
-import { Select } from 'antd';
-
-
-
-
-
-
-
+import { Form, Button, Icon, notification } from 'antd';
+import Select from 'react-select';
 
 function AddPerson(props) {
-    const { Option } = Select;
-    const { Title } = Typography;
-    return (
-        <div>
-        <Modal visible={props.isModalVisible} onCancel={props.handleCancel} onOk={props.handleOk} title="Добавить">
-        <br />
-        <br />
-        <h2>
-          Фамилия
-        </h2>   
-        <Input 
-        placeholder="Фамилия"
-        name="secondName"
-        value={props.state.secondName}
-        onChange={e => props.onInputChange(e)}/>
-        <br />
-        <br />
-        <h2>
-          Имя
-        </h2>
-        <Input 
-        placeholder="Имя"
-        name="firstName"
-        value={props.state.firstName}
-        onChange={e => props.onInputChange(e)}/>
-        <br />
-        <br />
-        <h2>
-          ИИН
-        </h2>
-        <Input 
-        placeholder="ИИН"
-        name="iin"
-        value={props.state.iin}
-        min={12}
-        max={12}
-        onChange={e => props.onInputChange(e)}/>
-        <br />
-        <br />
-        <h2>
-          Номер Телефона
-        </h2>
-        <Input 
-        placeholder="Номер телефона"
-        type="number"
-        name="phoneNumber"
-        rules={[
-          {
-            required: true,
-            message: "Please input the title of collection!"
-          }
-        ]}
-        value={props.state.phoneNumber}
-        onChange={props.onInputChange}/>
-        <br />
-        <br />
-        <h2>
-          Категория
-        </h2>
-        <Select
-        name="category"
-    labelInValue
-    defaultValue={{ label: 'Выбрать', value: 0 }}
-    style={{ width: 200 }}
-    onChange={e => props.onCategoryChange(e)}
-  >
-    <Option value='1'>Школьник</Option>
-    <Option value='3'>Студент</Option>
-    <Option value='2'>Многодетные</Option>
-    <Option value='5'>Пенсионер</Option>
-    <Option value='4'>Инвалид</Option>
-  </Select>
-  <Title level={4}>Цена: {props.state.price}</Title>
-        <Typography level={3} >Загрузить фото</Typography>
-        <input type="file" name="image" onChange={props.fileSelectHandler} />
-        </Modal>
-        </div>
-    );
-  }
+  const { Option } = Select;
+  const { Title } = Typography;
+  const FormItem = Form.Item;
+
+
+  const options = [
+    {value: '1', label:'Школьник'},
+    {value: '3', label:'Студент'},
+    {value: '2', label:'Многодетные'},
+    {value: '4', label:'Пенсионер'},
+    {value: '5', label:'Инвалид 1 гр'},
+    {value: '9', label:'Инвалид 2 гр'},
+    {value: '8', label:'Инвалид 3 гр'},
+    {value: '6', label:'Опекун'},
+    {value: '7', label:'Ветеран'}
+  ]
+
+  return (
+      <div>
+      <Modal visible={props.isModalVisible} onCancel={props.handleCancel} onOk={props.handleOk} title="Добавить">
+      <br />
+      <br />
+      <h3>
+        Фамилия
+      </h3>   
+      <Input 
+      placeholder="Фамилия"
+      name="secondName"
+      value={props.state.secondName}
+      onChange={e => props.onInputChange(e)}/>
+      <br />
+      <br />
+      <h3>
+        Имя
+      </h3>
+      <Input 
+      placeholder="Имя"
+      name="firstName"
+      value={props.state.firstName}
+      onChange={e => props.onInputChange(e)}/>
+      <br />
+      <br />
+      <h3>
+        ИИН
+      </h3>
+      <Input 
+      placeholder="ИИН"
+      name="iin"
+      value={props.state.iin}
+      min={12}
+      max={12}
+      onChange={e => props.onInputChange(e)}/>
+      <br />
+      <br />
+      <h3>
+        Номер Телефона
+      </h3>
+      <Input 
+      placeholder="Номер телефона"
+      type="number"
+      name="phoneNumber"
+      value={props.state.phoneNumber}
+      onChange={props.onInputChange}/>
+      <br />
+      <br />
+      <h3>
+        Категория
+      </h3>
+<Select 
+value={{value: props.categoryId, label: props.category}}
+id='selectCategory'
+options={options}
+onChange={props.onCategoryChange}
+/>
+<Title level={4}>Цена: {props.state.price}</Title>
+      <Typography level={3} >Загрузить фото</Typography>
+      <input type="file" id = "fileControl" name="image" onChange={props.fileSelectHandler} />
+      </Modal>
+      </div>
+  );
+}
 
 export default AddPerson;

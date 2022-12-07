@@ -1,17 +1,17 @@
 import { Table, Button, notification, Input} from 'antd';
 import { Select} from 'antd';
-import React,{Component, useEffect, useState}  from 'react';
+import React,{useEffect, useState}  from 'react';
 import {getPersonData, getDataInQueue, sendToProcess, search, deleteById} from '../util/APIUtils';
 import AddPerson from './AddPerson';
 import { API_BASE_URL} from '../constants';
 import axios from 'axios';
 import EditPerson from './EditPerson';
-
+import $ from 'jquery';
 const { Option } = Select;
 const personData = {
   secondName: '',
 firstName: '',
-phoneNumber: '',
+phoneNumber: '87',
 iin: '',
 image: null,
 imageList: [],
@@ -46,7 +46,7 @@ const [loading, setLoading] = useState(false);
 const [mainData, setMainData] = useState(data);
 const [person, setPerson] = useState(personData);
 const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-const [category, setCategory] = useState('');
+const [category, setCategory] = useState(personData.category);
 const [categoryId, setCategoryId] = useState(0);
 const [key, setKey] = useState(null);
 const [value, setValue] = useState(null);
@@ -72,14 +72,14 @@ const sendToNormalize = () => {
   sendToProcess(selectedRowKeys)
     .then(response => {
       notification.success({
-        message: 'Smart City',
+        message: 'Smart Qala',
           description: response.data,
       });
       getData();
     })
     .catch( response => {
       notification.success({
-        message: 'Smart City',
+        message: 'Smart Qala',
         description: response.error,
       })
       getData();
@@ -94,7 +94,7 @@ const sendToNormalize = () => {
  const start = () => {
         if(!props.isAuthenticated) {
           notification.error({
-            message: 'Smart City',
+            message: 'Smart Qala',
             description: 'Не авторизован'
           });
           return;
@@ -119,6 +119,14 @@ const handleCancel = () => {
 const handleOk = (e) => {
 setModalVisible(false);
 const fm = new FormData();
+    console.log(person.image);
+    console.log(person.secondName);
+    console.log(person.firstName);
+    console.log(person.phoneNumber);
+    console.log(person.iin);
+    console.log(category);
+    console.log(categoryId);
+    console.log(person.price);
     fm.append("image", person.image);
     fm.append("secondName", person.secondName);
     fm.append("firstName", person.firstName);
@@ -132,23 +140,29 @@ const fm = new FormData();
     axios.post(API_BASE_URL + "/person/addPerson", fm)
       .then(response => {
         notification.success({
-          message: 'Smart City',
+          message: 'Smart Qala',
           description: response.data,
         });
         getData();
       })
       .catch( response => {
         notification.error({
-          message: 'Smart City',
+          message: 'Smart Qala',
           description: response.data,
         })
       });
+clearState();
+}
 
-    
-    setPerson([])
-    setCategory(null)
-    setCategoryId(0)
-    console.log(person.image)
+const clearState = () => {
+  console.log(category);
+  setPerson(personData);
+  setCategory(personData.category);
+  setCategoryId(0);
+  console.log(category);
+  // var dropDown = document.getElementById("selectCategory");
+  // dropDown.selectedIndex = 0;
+  $("#fileControl").val('');
 }
 
 const showEditModal = () => {
@@ -173,13 +187,15 @@ const fileSelectHandler = (event) => {
 
 const onCategoryChange = (value) => {
   let prices = 0;
-  if(value.key >= 1 && value.key <5) {
+  if(value.value >= 1 && value.value <4) {
     prices = 500;
   } else {
     prices = 0;
   }
+  console.log(value)
+  // console.log(value.value, prices)
   setCategory(value.label);
-  setCategoryId(value.key)
+  setCategoryId(value.value)
   setPerson({...person, price : prices});
 };
 
@@ -203,14 +219,14 @@ const deleteRecord = (record) => {
   deleteById(record.id)
   .then(response => {
     notification.success({
-      message: 'Smart City',
+      message: 'Smart Qala',
         description: response.message
     });
     getData();
   })
   .catch(response => {
     notification.error({
-      message: 'Smart City',
+      message: 'Smart Qala',
         description: response.message
     });
   });
@@ -244,22 +260,12 @@ const deleteRecord = (record) => {
         key: 'cardType'
       },
       {
-        title: 'Цена',
+        title: 'Оплата',
         dataIndex: 'price',
         key: 'price'
       },
       {
-        title: 'Штрих Код',
-        dataIndex: 'barCode',
-        key: 'barCode'
-      },
-      {
-        title: 'Статус',
-        dataIndex: 'status',
-        key: 'status'
-      },
-      {
-        title: 'Дата добавления',
+        title: 'Создано',
         dataIndex: 'createdDate',
         key: 'createdDate',
         render: (date) => {
@@ -272,10 +278,14 @@ const deleteRecord = (record) => {
         key: 'action',
         render: (text, record) => (
           <div>
-            <Button style={{backgroundColor:'green', color: 'white'}} onClick={() => {showEditModal(); setRecord(record)}}>Изменить</Button>
+            <Button style={{backgroundColor:'green', color: 'white'}} 
+            onClick={() => {showEditModal(); setRecord(record)}}
+            disabled={!props.isAuthenticated}>Изменить</Button>
             <br/>
             <br/>
-            <Button style={{backgroundColor:'#FF6347', color: 'white'}} onClick={() => {deleteRecord(record)}} >Удалить</Button>
+            <Button style={{backgroundColor:'#FF6347', color: 'white'}} 
+            onClick={() => {deleteRecord(record)}} 
+            disabled={!props.isAuthenticated}>Удалить</Button>
           </div>
         ),
       },
@@ -294,7 +304,7 @@ const setRecord = (record) => {
    
     return (
       <div style={{padding: 100}}>
-         <div style={{margin: '10px 10px 10px 0', display: 'flex', justifyContent: 'center'}} >
+         {/* <div style={{margin: '10px 10px 10px 0', display: 'flex', justifyContent: 'center'}} >
         <Select
         name="key"
     labelInValue
@@ -311,18 +321,18 @@ const setRecord = (record) => {
         <Button type="primary" onClick={onSearch}  loading={loading}>
            Поиск
           </Button>
-        </div>
+        </div> */}
         <div style={{ marginBottom: 16 }}>
-          <Button type="primary" style={{backgroundColor: 'green', color: 'white'}} onClick={start} disabled={!hasSelected} loading={loading}>
+          <Button type="primary" style={{backgroundColor: 'green', color: 'white', fontSize: '20px'}} onClick={start} disabled={!hasSelected} loading={loading}>
             Отправить в цех
           </Button>
            <div style={{float: 'right'}}>
-          <Button type="primary" onClick={showModal} disabled={!props.isAuthenticated} loading={loading}>
+          <Button type="primary" style={{fontSize: '20px'}} onClick={showModal} disabled={!props.isAuthenticated} loading={loading}>
             Добавить
           </Button>
           </div>
           <AddPerson isModalVisible={isModalVisible} handleCancel={handleCancel} handleOk={handleOk}
-          onInputChange={onInputChange} state={person} fileSelectHandler={fileSelectHandler} onCategoryChange={onCategoryChange}/>
+          onInputChange={onInputChange} state={person} category={category} categoryId={categoryId} fileSelectHandler={fileSelectHandler} onCategoryChange={onCategoryChange}/>
           <EditPerson isModalVisible={isEditModalVisible} handleOk={handleEditOk} handleCancel={handleEditCancel} record={editRecord} getData={getData}/>
         <span style={{ marginLeft: 8 }}>
             {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}

@@ -32,7 +32,8 @@ class App extends Component {
       currentUser: null,
       isAuthenticated: false,
       isAdminAuthenticated: false,
-      isLoading: false
+      isLoading: false,
+      authority: ''
     }
     this.handleLogout = this.handleLogout.bind(this);
     this.loadCurrentUser = this.loadCurrentUser.bind(this);
@@ -61,9 +62,11 @@ class App extends Component {
       if(response.authorities[0].authority === "ROLE_ADMIN") {
         console.log(response, "app");
         this.setState({
-          isAdminAuthenticated: true
+          isAdminAuthenticated: true,
+          authority: 'ADMIN'
         });
       }
+      console.log(this.state.authority)
     }).catch(error => {
       this.setState({
         isLoading: false
@@ -75,30 +78,46 @@ class App extends Component {
     this.loadCurrentUser();
   }
 
-  handleLogout(redirectTo="/", notificationType="success", description="You're successfully logged out.") {
+  handleLogout(redirectTo="/login", notificationType="success", description="You're successfully logged out.") {
     localStorage.removeItem(ACCESS_TOKEN);
 
+    console.log(this.state.authority)
+    
     this.setState({
       currentUser: null,
       isAuthenticated: false,
-      isAdminAuthenticated: false
+      isAdminAuthenticated: false,
+      authority: ''
     });
-
     this.props.history.push(redirectTo);
     
     notification[notificationType]({
-      message: 'Smart city',
+      message: 'Smart Qala',
       description: description,
     });
   }
 
   handleLogin() {
     notification.success({
-      message: 'Smart City',
+      message: 'Smart Qala',
       description: "You're successfully logged in.",
     });
     this.loadCurrentUser();
-    this.props.history.push("/");
+    console.log(this.state.authority)
+    // if(this.state.authority == "ADMIN") {
+    //   this.props.history.push("/admin");
+    // } else {
+    //   this.props.history.push("/");
+    // }
+    getCurrentUser()
+    .then(response => {
+    
+      if(response.authorities[0].authority === "ROLE_ADMIN") {
+        this.props.history.push("/admin");
+      } else {
+        this.props.history.push("/");
+      }
+    })
   }
 
   render() {

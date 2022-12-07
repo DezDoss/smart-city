@@ -33,19 +33,19 @@ function EditPerson(props) {
 
     const handleOk = () => {
      axios.get(API_BASE_URL + "/person/editPerson?id=" + props.record.id + "&firstName=" + firstName + "&secondName=" + secondName 
-     + "&iin=" + iin + "&phoneNumber=" + phoneNumber + "&category=" + category + "&categoryId=" + categoryId + "&price=" + price)
+     + "&iin=" + iin + "&phoneNumber=" + phoneNumber/* + "&category=" + category + "&categoryId=" + categoryId + "&price=" + price*/)
      .then(response => {
        console.log(response)
        notification.success({
          
-         message: 'Smart City',
+         message: 'Smart Qala',
          description: response.data.message,
        });
        props.getData()
      })
      .catch( response => {
        notification.error({
-         message: 'Smart City',
+         message: 'Smart Qala',
          description: response.data.message,
        })
        props.getData
@@ -127,6 +127,7 @@ const handlePhoneNumberChange = e => {
         onChange={handlePhoneNumberChange}/>
         <br />
         <br />
+{/*         
         <Select
         name="category"
     labelInValue
@@ -135,13 +136,17 @@ const handlePhoneNumberChange = e => {
     style={{ width: 120 }}
     onChange={onCategoryChange}
   >
-    <Option value='1'>Школьник</Option>
+   <Option value='1'>Школьник</Option>
     <Option value='3'>Студент</Option>
     <Option value='2'>Многодетные</Option>
-    <Option value='5'>Пенсионер</Option>
-    <Option value='4'>Инвалид</Option>
+    <Option value='4'>Пенсионер</Option>
+    <Option value='5'>Инвалид 1 гр</Option>
+    <Option value='9'>Инвалид 2 гр</Option>
+    <Option value='8'>Инвалид 3 гр</Option>
+    <Option value='6'>Опекун</Option>
+    <Option value='7'>Ветеран</Option>
   </Select>
-  <Title level={4}>Цена: {price}</Title>
+  <Title level={4}>Цена: {price}</Title>} */}
         {/* <Typography level={3} >Загрузить фото</Typography> */}
         {/* <input type="file" name="image" onChange={(e) => fileSelectHandler(e)} /> */}
         </Modal>

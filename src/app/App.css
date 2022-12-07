@@ -5,3 +5,7 @@
 thead[class*="ant-table-thead"] th{
   background-color: yellow !important;
 }
+
+.ant-table table {
+  font-size: 13px;
+}

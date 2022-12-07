@@ -18,8 +18,8 @@ class AdminComponent extends Component{
     // ajax request after empty completing
     setTimeout(() => {
       this.setState({
-        selectedRowKeys: [],
-        loading: false,
+        selectedRowKeys: []
+        // loading: false,
       });
     }, 1000);
   };
@@ -42,7 +42,7 @@ class AdminComponent extends Component{
     update(record.id)
     .then(response => {
       notification.success({
-        description: "Smart City",
+        description: "Smart Qala",
         message: response.message
       });
       this.getData();
@@ -50,7 +50,7 @@ class AdminComponent extends Component{
   }
 
   sendToCreateFile = async () => {
-      axios(API_BASE_URL + '/person/generatePdf?ids=' + this.state.selectedRowKeys, {
+      axios(API_BASE_URL + '/person/generatePdf', {
         method: "POST",
         responseType: "blob"
         //Force to receive data in a Blob Format
@@ -70,9 +70,15 @@ class AdminComponent extends Component{
             document.body.appendChild(a);
             a.click();
             this.getData();
+            this.setState({
+              loading: false
+            });
         })
         .catch(error => {
           console.log(error);
+          this.setState({
+            loading: false
+          });
         });
   };
  
@@ -130,7 +136,8 @@ showModal = () => {
             key: 'action',
             render: (text, record) => (
               <div>
-                <Button style={{backgroundColor:'green', color: 'white'}} onClick={() => {this.sendToEdit(record)}}>Отправить обратно(редактирование)</Button>
+                <Button style={{backgroundColor:'green', color: 'white'}} 
+                onClick={() => {this.sendToEdit(record)}}>Отправить в редактирование</Button>
               </div>
             ),
           },
@@ -143,20 +150,21 @@ showModal = () => {
       selectedRowKeys,
       onChange: this.onSelectChange,
     };
-    const hasSelected = selectedRowKeys.length > 0;
+    const hasSelected = this.state.hisData.length >= 10;
     return (
       <div style={{padding: 100}}>
-      <Button type="primary" onClick={this.start} disabled={!hasSelected} loading={loading}>
+      <Button type="primary" style={{fontSize: '20px'}} onClick={this.start} disabled={!hasSelected} loading={loading}>
       Выгрузить
     </Button>
-    <span style={{ marginLeft: 8 }}>
+    {/* <span style={{ marginLeft: 8 }}>
             {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
-          </span>
+          </span> */}
       <div style={{padding: 10, display: 'flex', justifyContent: 'center'}}>
         <div style={{ marginBottom: 16 }}>
          
         </div>
-        <Table rowKey={record => record.id} rowSelection={rowSelection} columns={columns} dataSource={this.state.hisData} />
+        <Table /*rowKey={record => record.id} rowSelection={rowSelection}*/ bordered columns={columns} dataSource={this.state.hisData} 
+        pagination={false}/>
       </div>
       </div>
     );

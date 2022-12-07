@@ -12,7 +12,7 @@ class Login extends Component {
         const AntWrappedLoginForm = Form.create()(LoginForm)
         return (
             <div className="login-container">
-                <h1 className="page-title">Login</h1>
+                <h1 className="page-title">Войти</h1>
                 <div className="login-content">
                     <AntWrappedLoginForm onLogin={this.props.onLogin} />
                 </div>
@@ -39,12 +39,12 @@ class LoginForm extends Component {
                 }).catch(error => {
                     if(error.status === 401) {
                         notification.error({
-                            message: 'Smart City',
+                            message: 'Smart Qala',
                             description: 'Your Username or Password is incorrect. Please try again!'
                         });                    
                     } else {
                         notification.error({
-                            message: 'Smart City',
+                            message: 'Smart Qala',
                             description: error.message || 'Sorry! Something went wrong. Please try again!'
                         });                                            
                     }
@@ -81,8 +81,8 @@ class LoginForm extends Component {
                 )}
                 </FormItem>
                 <FormItem>
-                    <Button type="primary" htmlType="submit" size="large" className="login-form-button">Login</Button>
-                    Or <Link to="/signup">register now!</Link>
+                    <Button type="primary" htmlType="submit" size="large" className="login-form-button">Войти</Button>
+                    {/* или <Link to="/signup">регистрируйся сейчас!</Link> */}
                 </FormItem>
             </Form>
         );
